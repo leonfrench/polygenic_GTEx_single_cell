@@ -13,7 +13,7 @@ source("./AUCFunction.R")
 source("./string_processing.R")
 
 #deploy with:
-#rsconnect::deployApp(appFileManifest = "appFileManifest.txt")
+#rsconnect::deployApp(appFileManifest = "appFileManifest.txt", account = 'polygenic')
 
 
 apply_MWU <- function(column, targetIndices) {
@@ -24,7 +24,7 @@ ui <- fluidPage(
   shinyjs::useShinyjs(),
   #tags$head(includeHTML("google-analytics.html")),
   # App title ----
-  titlePanel("Polygenic tester for the GTEx single cell snRNA-seq data (from Eraslan et al.)"),
+  titlePanel("Polygenic tester for the GTEx single cell snRNA-seq data from Eraslan et al."),
   
   # Sidebar panel for inputs ----
   sidebarLayout(
@@ -53,7 +53,7 @@ ui <- fluidPage(
       selectInput(
         inputId = 'species',
         label = 'Species of input genes (data file used appears to be human gene symbols):',
-        choices = c('Human', 'Mouse', 'Macaca mulatta')
+        choices = c('Human', 'Mouse', 'Monkey')
       ),
       actionButton(inputId = "submit",
                    label = "Submit"),
