@@ -2,7 +2,7 @@
 
 A quick tool to test for cell type specific expression in the GTEx single cell pilot data. Includes data from the heart, prostate, skin, lung, breast, esophagus muscularis, esophagus mucosa and skeletal muscle.
 
-Thank you to Gökcen Eraslan for sharing the full differential expression matrices.
+Thank you to Dr. Gökcen Eraslan for sharing the full differential expression matrices.
 
 Currently deployed on [shinyapps.io](https://polygenic.shinyapps.io/polygenic_gtex_single_cell/)
 

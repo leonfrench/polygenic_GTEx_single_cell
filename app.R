@@ -64,7 +64,7 @@ ui <- fluidPage(
       hr(),
       
       
-      tags$b("Thank you to Gökcen Eraslan for sharing the full differential expression matrices used here."),
+      tags$b("Thank you to Dr. Gökcen Eraslan for sharing the full differential expression matrices used here."),
       tags$b("Full data from the Atlas are described in and available at:"),
       br(),
       tags$a(href="https://www.science.org/doi/10.1126/science.abl4290", "Gökcen Eraslan et al. paper"),
