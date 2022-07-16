@@ -1,3 +1,4 @@
+library(matrixTests)
 library(readxl)
 library(here)
 library(shiny)
@@ -14,11 +15,6 @@ source("./string_processing.R")
 
 #deploy with:
 #rsconnect::deployApp(appFileManifest = "appFileManifest.txt", account = 'polygenic')
-
-
-apply_MWU <- function(column, targetIndices) {
-  wilcox.test(column[targetIndices], column[!targetIndices], conf.int = F)$p.value
-}
 
 ui <- fluidPage(
   shinyjs::useShinyjs(),
@@ -121,7 +117,7 @@ server <- function(input, output) {
     #gene_list <- 'IDH1\nLIPE\nACSL1\nADH1B\nPPARG\nGPAM\nADIPOQ\nEBF1\nACACB\n'
     #cleaned_gene_list <- process_input_genes(gene_list)
     #cleaned_gene_list <- convert2mac(input_genes = cleaned_gene_list, in_species = "Human")
-    # load reference data
+    #load reference data
     
     cleaned_gene_list <- convert2human(input_genes = cleaned_gene_list, in_species = input$species)
     first_cleaned_gene_list <- cleaned_gene_list
@@ -152,8 +148,14 @@ server <- function(input, output) {
     df <- cell_expression_ranks %>%
       select(-gene_symbol)
     
-    AUROC <- map_df(df, auroc_analytic, targetIndices)
-    wilcox_tests <- map_df(df, apply_MWU, targetIndices)
+    print(paste0("before AUC taken:", Sys.time() - start))
+    #AUROC <- map_df(df, auroc_analytic, targetIndices) #old slower approach
+    AUROC <- auroc_analytic_ranked_profiles(df, targetIndices) #new faster matrix based approach
+    print(paste0("After auc time taken:", Sys.time() - start))
+
+    #changed to matrixTests as it's much faster
+    wilcox_tests <- col_wilcoxon_twosample(df[targetIndices, ], df[!targetIndices,])
+    wilcox_tests <- as_tibble(t(wilcox_tests[, "pvalue", drop=F]), )
     
     # group results together in a single table
     table <- bind_cols(gather(AUROC, key = cell_type, value = AUROC), 

@@ -14,3 +14,20 @@ auroc_analytic <- function(scores, labels) {
   
   return(auroc)
 } 
+
+#for ranked_profiles, the columns are the samples or experiments and the rows are what is being marked
+#assumes the indices are lined up
+auroc_analytic_ranked_profiles <- function(ranked_profiles, targetIndices) {
+  #check the length of targetIndices is the row length of ranked_profiles
+  if (length(targetIndices ) != nrow(ranked_profiles)) {
+    stop("Index length does not equal input table row count!")
+  }
+  summed_ranks <- targetIndices %*% as.matrix(ranked_profiles)
+  
+  nL = nrow(ranked_profiles)  #number of labels/ total length
+  np <- sum(targetIndices)     #number of positives
+  nn <- nL - np #number of negatives
+  
+  AUCs <- (summed_ranks/np - (np + 1)/2)/nn
+  return(as_tibble(AUCs))
+}
